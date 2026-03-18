@@ -102,6 +102,154 @@
       pointer-events: none;
     }
     .hero > * { position: relative; z-index: 1; }
+
+    /* PIZZA CHEF ANIMATION */
+    .pizza-anim {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 120px;
+      margin-bottom: 28px;
+      image-rendering: pixelated;
+    }
+
+    /* Dough */
+    .pa-dough {
+      position: absolute;
+      width: 36px;
+      height: 12px;
+      background: #F5DEB3;
+      border: 3px solid #C8A86B;
+      border-radius: 50%;
+      right: 0;
+      top: 10px;
+      animation: dough-throw 2s ease-in-out infinite;
+      transform-origin: center center;
+    }
+
+    /* Hat crown */
+    .pa-hat-crown {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border: 3px solid #111;
+      left: 4px;
+      top: 28px;
+    }
+
+    /* Hat brim */
+    .pa-hat-brim {
+      position: absolute;
+      width: 30px;
+      height: 6px;
+      background: #fff;
+      border: 3px solid #111;
+      left: 0;
+      top: 47px;
+    }
+
+    /* Head */
+    .pa-head {
+      position: absolute;
+      width: 20px;
+      height: 16px;
+      background: #FBBF8C;
+      border: 3px solid #111;
+      left: 4px;
+      top: 51px;
+    }
+
+    /* Eye */
+    .pa-eye {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #111;
+      border-radius: 50%;
+      left: 20px;
+      top: 56px;
+    }
+
+    /* Mustache */
+    .pa-mustache {
+      position: absolute;
+      width: 10px;
+      height: 4px;
+      background: #5C3B1E;
+      left: 16px;
+      top: 63px;
+      border-radius: 0 0 3px 3px;
+    }
+
+    /* Body */
+    .pa-body {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background: #fff;
+      border: 3px solid #111;
+      left: 4px;
+      top: 65px;
+    }
+
+    /* Coat buttons */
+    .pa-body::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #3B1FA8;
+      border-radius: 50%;
+      top: 5px;
+      left: 9px;
+      box-shadow: 0 8px 0 #3B1FA8;
+    }
+
+    /* Arm */
+    .pa-arm {
+      position: absolute;
+      width: 24px;
+      height: 7px;
+      background: #fff;
+      border: 3px solid #111;
+      left: 26px;
+      top: 70px;
+      transform-origin: left center;
+      animation: arm-raise 2s ease-in-out infinite;
+    }
+
+    /* Legs */
+    .pa-leg-l {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      background: #1E3A5F;
+      border: 3px solid #111;
+      left: 4px;
+      top: 89px;
+    }
+    .pa-leg-r {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      background: #1E3A5F;
+      border: 3px solid #111;
+      left: 18px;
+      top: 89px;
+    }
+
+    @keyframes dough-throw {
+      0%, 100% { transform: translateY(60px) rotate(0deg) scaleX(1); }
+      25%       { transform: translateY(20px) rotate(180deg) scaleX(1.3); }
+      50%       { transform: translateY(0px)  rotate(360deg) scaleX(0.75); }
+      75%       { transform: translateY(20px) rotate(540deg) scaleX(1.2); }
+    }
+
+    @keyframes arm-raise {
+      0%, 100% { transform: rotate(20deg); }
+      35%, 65% { transform: rotate(-70deg); }
+    }
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -620,8 +768,17 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge">
-      📲 Built for independent restaurants
+    <div class="pizza-anim" aria-label="Pizza chef animation">
+      <div class="pa-dough"></div>
+      <div class="pa-hat-crown"></div>
+      <div class="pa-hat-brim"></div>
+      <div class="pa-head"></div>
+      <div class="pa-eye"></div>
+      <div class="pa-mustache"></div>
+      <div class="pa-body"></div>
+      <div class="pa-arm"></div>
+      <div class="pa-leg-l"></div>
+      <div class="pa-leg-r"></div>
     </div>
     <h1>Stop Feeding DoorDash.<br /><span>Own Your Customers.</span></h1>
     <p>Boostly helps restaurants capture guest info in-store, re-engage them with SMS, and drive repeat visits — without relying on third-party apps.</p>
