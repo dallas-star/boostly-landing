@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boostly ROI Calculator — See What You're Leaving on the Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #FF5C2B;
+      --orange-dark: #E04A1F;
+      --orange-light: #FFF1EC;
+      --black: #0F0F0F;
+      --gray-900: #1A1A1A;
+      --gray-700: #404040;
+      --gray-500: #6B6B6B;
+      --gray-200: #E8E8E8;
+      --gray-100: #F5F5F5;
+      --white: #FFFFFF;
+      --green: #1DB954;
+      --red: #E03030;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--black);
+      background: var(--gray-100);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--black);
+      padding: 0 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--orange);
+      text-decoration: none;
+    }
+    .nav-back {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: rgba(255,255,255,0.8); }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: var(--black);
+      color: var(--white);
+      padding: 56px 24px 64px;
+      text-align: center;
+    }
+    .page-header .label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .page-header h1 span { color: var(--orange); }
+    .page-header p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* CALCULATOR LAYOUT */
+    .calc-wrapper {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* INPUTS PANEL */
+    .inputs-panel {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid var(--gray-200);
+    }
+    .inputs-panel h2 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .inputs-panel .panel-sub {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 32px;
+    }
+    .input-group:last-child { margin-bottom: 0; }
+
+    .input-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .input-label span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    .input-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--black);
+      letter-spacing: -0.5px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--gray-200);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--orange);
+      cursor: pointer;
+      border: 3px solid var(--white);
+      box-shadow: 0 2px 8px rgba(255,92,43,0.4);
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--orange);
+      cursor: pointer;
+      border: 3px solid var(--white);
+      box-shadow: 0 2px 8px rgba(255,92,43,0.4);
+    }
+
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .range-labels span {
+      font-size: 11px;
+      color: var(--gray-500);
+    }
+
+    .plan-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--gray-100);
+      border-radius: 10px;
+      padding: 4px;
+      margin-top: 10px;
+    }
+    .plan-toggle button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      background: transparent;
+      color: var(--gray-500);
+      transition: all 0.15s;
+    }
+    .plan-toggle button.active {
+      background: var(--white);
+      color: var(--black);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    /* RESULTS PANEL */
+    .results-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .result-card {
+      border-radius: 16px;
+      padding: 28px 32px;
+    }
+    .result-card.loss {
+      background: #1A1A1A;
+      color: var(--white);
+    }
+    .result-card.gain {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+    }
+    .result-card.roi-card {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    .result-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .result-card.loss .result-card-label { color: rgba(255,255,255,0.35); }
+    .result-card.gain .result-card-label { color: var(--orange); }
+    .result-card.roi-card .result-card-label { color: rgba(255,255,255,0.6); }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      gap: 16px;
+    }
+    .result-card.gain .result-row { border-bottom-color: var(--gray-200); }
+    .result-card.roi-card .result-row { border-bottom-color: rgba(255,255,255,0.15); }
+    .result-row:last-of-type { border-bottom: none; }
+
+    .result-row .r-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.4;
+      flex: 1;
+    }
+    .result-card.gain .r-label { color: var(--gray-500); }
+    .result-card.roi-card .r-label { color: rgba(255,255,255,0.7); }
+
+    .result-row .r-val {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .r-val.red { color: #FF6B6B; }
+    .r-val.green { color: var(--green); }
+    .r-val.white { color: var(--white); }
+    .r-val.dark { color: var(--black); }
+
+    .result-hero {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .result-card.gain .result-hero { border-top-color: var(--gray-200); }
+
+    .result-hero-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 6px;
+    }
+    .result-card.gain .result-hero-label { color: var(--gray-500); }
+    .result-card.roi-card .result-hero-label { color: rgba(255,255,255,0.6); }
+
+    .result-hero-number {
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1;
+      transition: all 0.2s;
+    }
+    .result-card.loss .result-hero-number { color: #FF6B6B; }
+    .result-card.gain .result-hero-number { color: var(--black); }
+    .result-card.roi-card .result-hero-number { color: var(--white); }
+
+    .result-hero-sub {
+      font-size: 13px;
+      margin-top: 4px;
+      opacity: 0.55;
+    }
+
+    /* CTA SECTION */
+    .calc-cta {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px 32px;
+      border: 1px solid var(--gray-200);
+      text-align: center;
+    }
+    .calc-cta h3 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .calc-cta p {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-bottom: 20px;
+      line-height: 1.55;
+    }
+    .calc-cta .btn-primary {
+      display: block;
+      text-align: center;
+      background: var(--orange);
+      color: var(--white);
+      padding: 15px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    .calc-cta .btn-primary:hover { background: var(--orange-dark); }
+    .calc-cta .fine-print {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 10px;
+    }
+
+    /* FOOTNOTE */
+    .footnote {
+      text-align: center;
+      padding: 0 24px 40px;
+      font-size: 12px;
+      color: var(--gray-500);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 820px) {
+      .calc-wrapper {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .results-panel { position: static; }
+      .inputs-panel { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="logo">Boostly</a>
+      <a href="/" class="nav-back">← Back to main site</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="label">ROI Calculator</div>
+    <h1>See exactly what<br /><span>Boostly is worth to you.</span></h1>
+    <p>Put in your numbers. Get your number. No email required.</p>
+  </div>
+
+  <div class="calc-wrapper">
+
+    <!-- INPUTS -->
+    <div class="inputs-panel">
+      <h2>Your Restaurant</h2>
+      <p class="panel-sub">Adjust the sliders to match your restaurant. All results update instantly.</p>
+
+      <div class="input-group">
+        <div class="input-label">
+          <span>Monthly delivery revenue (DoorDash / Uber Eats)</span>
+          <span class="input-value" id="val-delivery">$5,000</span>
+        </div>
+        <input type="range" id="slider-delivery" min="0" max="30000" step="500" value="5000" />
+        <div class="range-labels"><span>$0</span><span>$30,000</span></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">
+          <span>Average platform commission rate</span>
+          <span class="input-value" id="val-commission">28%</span>
+        </div>
+        <input type="range" id="slider-commission" min="20" max="35" step="1" value="28" />
+        <div class="range-labels"><span>20%</span><span>35%</span></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">
+          <span>Average customer spend per visit</span>
+          <span class="input-value" id="val-spend">$45</span>
+        </div>
+        <input type="range" id="slider-spend" min="10" max="150" step="5" value="45" />
+        <div class="range-labels"><span>$10</span><span>$150</span></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">
+          <span>How often a typical regular visits per month</span>
+          <span class="input-value" id="val-frequency">2×/month</span>
+        </div>
+        <input type="range" id="slider-frequency" min="1" max="8" step="0.5" value="2" />
+        <div class="range-labels"><span>1×</span><span>8×</span></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">
+          <span>Your plan</span>
+        </div>
+        <div class="plan-toggle">
+          <button id="plan-starter" onclick="setPlan(149, this)">Starter — $149/mo</button>
+          <button id="plan-growth" class="active" onclick="setPlan(299, this)">Growth — $299/mo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-panel">
+
+      <!-- Card 1: Loss -->
+      <div class="result-card loss">
+        <div class="result-card-label">What the apps are taking from you</div>
+        <div class="result-row">
+          <span class="r-label">Monthly commission bleed</span>
+          <span class="r-val red" id="res-monthly-bleed">$1,400</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Commission % going to platforms</span>
+          <span class="r-val red" id="res-commission-pct">28%</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Customer data you receive</span>
+          <span class="r-val red">$0</span>
+        </div>
+        <div class="result-hero">
+          <div class="result-hero-label">You're paying DoorDash / year</div>
+          <div class="result-hero-number" id="res-annual-bleed">$16,800</div>
+          <div class="result-hero-sub">in commissions alone — not counting lost repeat business</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Gain -->
+      <div class="result-card gain">
+        <div class="result-card-label">What Boostly adds back</div>
+        <div class="result-row">
+          <span class="r-label">New customer opt-ins / month (Boostly avg)</span>
+          <span class="r-val dark">200+</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Value of each returning customer / month</span>
+          <span class="r-val dark" id="res-customer-value">$90</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Estimated returning customers / month</span>
+          <span class="r-val green" id="res-returning">30</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Commission on direct visits</span>
+          <span class="r-val green">$0</span>
+        </div>
+        <div class="result-hero">
+          <div class="result-hero-label">Monthly revenue recovered</div>
+          <div class="result-hero-number" id="res-monthly-gain">$2,700</div>
+          <div class="result-hero-sub">in direct repeat revenue you keep 100% of</div>
+        </div>
+      </div>
+
+      <!-- Card 3: ROI -->
+      <div class="result-card roi-card">
+        <div class="result-card-label">Your ROI with Boostly</div>
+        <div class="result-row">
+          <span class="r-label">Boostly monthly cost</span>
+          <span class="r-val white" id="res-plan-cost">$299/mo</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Monthly net gain</span>
+          <span class="r-val white" id="res-net-monthly">$2,401</span>
+        </div>
+        <div class="result-row">
+          <span class="r-label">Visits needed to break even</span>
+          <span class="r-val white" id="res-payback">7 visits</span>
+        </div>
+        <div class="result-hero">
+          <div class="result-hero-label">Annual net gain</div>
+          <div class="result-hero-number" id="res-annual-gain">$28,812</div>
+          <div class="result-hero-sub" id="res-roi-multiple">9.5× return on your Boostly investment</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="calc-cta">
+        <h3 id="cta-headline">Start capturing customers this week.</h3>
+        <p id="cta-body">Your first 14 days are free. QR codes go live the moment you sign up. No credit card, no contract.</p>
+        <a href="/#get-started" class="btn-primary">Start My Free 14-Day Trial →</a>
+        <p class="fine-print">No credit card · No contract · Cancel anytime</p>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="footnote">
+    * Estimates are based on Boostly customer averages (200+ opt-ins/month per location, 15% conservative return rate). Individual results vary by location, offer quality, and market. Commission bleed is calculated from your stated delivery revenue and commission rate. All Boostly revenue projections assume Growth plan pricing ($299/mo).
+  </p>
+
+  <script>
+    let planCost = 299;
+
+    const fmt = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+    function animateValue(el, newVal, isString = false) {
+      if (isString) {
+        el.textContent = newVal;
+        return;
+      }
+      const start = parseFloat(el.dataset.raw || 0);
+      const end = newVal;
+      const duration = 280;
+      const steps = 20;
+      const increment = (end - start) / steps;
+      let current = start;
+      let step = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        step++;
+        if (step >= steps) {
+          current = end;
+          clearInterval(timer);
+        }
+        el.dataset.raw = current;
+        el.textContent = fmt(current);
+      }, duration / steps);
+    }
+
+    function calculate() {
+      const delivery   = parseFloat(document.getElementById('slider-delivery').value);
+      const commission = parseFloat(document.getElementById('slider-commission').value) / 100;
+      const spend      = parseFloat(document.getElementById('slider-spend').value);
+      const frequency  = parseFloat(document.getElementById('slider-frequency').value);
+
+      // Update display values
+      document.getElementById('val-delivery').textContent   = fmt(delivery);
+      document.getElementById('val-commission').textContent = Math.round(commission * 100) + '%';
+      document.getElementById('val-spend').textContent      = fmt(spend);
+      document.getElementById('val-frequency').textContent  = frequency % 1 === 0 ? frequency + '×/month' : frequency.toFixed(1) + '×/month';
+
+      // Card 1: Loss
+      const monthlyBleed = delivery * commission;
+      const annualBleed  = monthlyBleed * 12;
+
+      document.getElementById('res-monthly-bleed').textContent = fmt(monthlyBleed);
+      document.getElementById('res-commission-pct').textContent = Math.round(commission * 100) + '%';
+      animateValue(document.getElementById('res-annual-bleed'), annualBleed);
+
+      // Card 2: Gain
+      const avgOptins       = 200;
+      const returnRate      = 0.15;
+      const customerValue   = spend * frequency;
+      const returningMonthly = Math.round(avgOptins * returnRate);
+      const monthlyGain     = returningMonthly * customerValue;
+      const annualGain      = monthlyGain * 12;
+
+      document.getElementById('res-customer-value').textContent = fmt(customerValue);
+      document.getElementById('res-returning').textContent      = returningMonthly;
+      animateValue(document.getElementById('res-monthly-gain'), monthlyGain);
+
+      // Card 3: ROI
+      const netMonthly   = monthlyGain - planCost;
+      const netAnnual    = annualGain - (planCost * 12);
+      const paybackVisits = Math.ceil(planCost / spend);
+      const roiMultiple   = netAnnual / (planCost * 12);
+
+      document.getElementById('res-plan-cost').textContent  = fmt(planCost) + '/mo';
+      document.getElementById('res-net-monthly').textContent = fmt(netMonthly);
+      document.getElementById('res-payback').textContent    = paybackVisits + ' direct visit' + (paybackVisits !== 1 ? 's' : '');
+      animateValue(document.getElementById('res-annual-gain'), netAnnual);
+      document.getElementById('res-roi-multiple').textContent = roiMultiple.toFixed(1) + '× return on your Boostly investment';
+
+      // Dynamic CTA
+      const ctaHeadline = document.getElementById('cta-headline');
+      const ctaBody     = document.getElementById('cta-body');
+      if (netAnnual > 0) {
+        ctaHeadline.textContent = 'You\'re leaving ' + fmt(netAnnual) + ' on the table this year.';
+        ctaBody.textContent     = 'Start your free 14-day trial. Capture your first customers this week. No credit card, no contract.';
+      } else {
+        ctaHeadline.textContent = 'Start capturing customers this week.';
+        ctaBody.textContent     = 'Your first 14 days are free. QR codes go live the moment you sign up. No credit card, no contract.';
+      }
+    }
+
+    function setPlan(cost, btn) {
+      planCost = cost;
+      document.querySelectorAll('.plan-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      calculate();
+    }
+
+    // Wire up sliders
+    ['delivery', 'commission', 'spend', 'frequency'].forEach(id => {
+      document.getElementById('slider-' + id).addEventListener('input', calculate);
+    });
+
+    // Initial render
+    calculate();
+  </script>
+
+</body>
+</html>
